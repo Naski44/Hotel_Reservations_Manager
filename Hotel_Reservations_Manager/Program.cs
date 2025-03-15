@@ -1,4 +1,17 @@
+using Hotel_Reservations_Manager.Data;
+using Hotel_Reservations_Manager.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Konfiguraciq na bazata danni
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Dobavqne na Identity
+builder.Services.AddDefaultIdentity<User>(options =>
+options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
