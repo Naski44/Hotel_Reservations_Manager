@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel_Reservations_Manager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250315093600_initial")]
+    [Migration("20250317195019_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -33,64 +33,34 @@ namespace Hotel_Reservations_Manager.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"));
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Adult")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
 
                     b.HasKey("ClientId");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("Clients");
                 });
@@ -153,6 +123,9 @@ namespace Hotel_Reservations_Manager.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<int>("RoomType")
+                        .HasColumnType("int");
+
                     b.HasKey("RoomNumber");
 
                     b.ToTable("Rooms");
@@ -185,14 +158,16 @@ namespace Hotel_Reservations_Manager.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateOnly>("HireDate")
                         .HasColumnType("date");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -202,7 +177,8 @@ namespace Hotel_Reservations_Manager.Migrations
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -384,6 +360,13 @@ namespace Hotel_Reservations_Manager.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Hotel_Reservations_Manager.Models.Client", b =>
+                {
+                    b.HasOne("Hotel_Reservations_Manager.Models.Reservation", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("ReservationId");
+                });
+
             modelBuilder.Entity("Hotel_Reservations_Manager.Models.Reservation", b =>
                 {
                     b.HasOne("Hotel_Reservations_Manager.Models.Client", "Client")
@@ -457,6 +440,11 @@ namespace Hotel_Reservations_Manager.Migrations
             modelBuilder.Entity("Hotel_Reservations_Manager.Models.Client", b =>
                 {
                     b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("Hotel_Reservations_Manager.Models.Reservation", b =>
+                {
+                    b.Navigation("Clients");
                 });
 
             modelBuilder.Entity("Hotel_Reservations_Manager.Models.Room", b =>

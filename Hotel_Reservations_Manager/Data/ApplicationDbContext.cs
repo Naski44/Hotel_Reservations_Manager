@@ -19,12 +19,14 @@ namespace Hotel_Reservations_Manager.Data
             builder.Entity<Reservation>()
                 .HasOne(r => r.Client)
                 .WithMany(c => c.Reservations)
-                .HasForeignKey(r => r.ClientId);
+                .HasForeignKey(r => r.ClientId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Reservation>()
                 .HasOne(re => re.Room)
                 .WithMany(ro => ro.Reservations)
-                .HasForeignKey(re => re.RoomNumber);
+                .HasForeignKey(re => re.RoomNumber)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
