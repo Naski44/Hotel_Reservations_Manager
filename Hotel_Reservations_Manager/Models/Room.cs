@@ -11,6 +11,6 @@ namespace Hotel_Reservations_Manager.Models
         public bool IsAvailable { get; set; }
         public double AdultPrice { get; set; }
         public double ChildPrice { get; set; }
-        public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Reservation>? Reservations { get; set; }
     }
 }
